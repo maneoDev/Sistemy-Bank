@@ -1,13 +1,13 @@
+# PROJETO DIO - SISTEMA BANCARIO
 
+    saldo = 0
+    limite = 500
+    extrato = ""
+    Quantidade_saque = 0 
+    LIMITE = 3
+    contador = 0 
 
-saldo = 0
-limite = 500
-extrato = ""
-quantidade_saque = 0 
-LIMITE = 3
-contador = 0 
-
-while True:
+    while True:
     opcao = int(input("[1] Depositar\n[2] Sacar\n[3] Extrato\n[4] Sair\n\n"))
     
     if opcao == 1:
