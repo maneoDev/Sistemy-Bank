@@ -1,11 +1,19 @@
-# PROJETO DIO - SISTEMA BANCARIO
+# DESAFIO DIO
 
     saldo = 0
     limite = 500
     extrato = ""
-    Quantidade_saque = 0 
+    quantidade_saque = 0 
     LIMITE = 3
-    contador = 0 
+    contador = 0  
+
+
+    usuario = [0,1,2]
+    usuario[0] = input("Email: ")
+    usuario[1] = input("Nome: ")
+    usuario[2] = input("Telefone: ")
+
+    print(f"Bem vindo {usuario[1]}\n")
 
     while True:
     opcao = int(input("[1] Depositar\n[2] Sacar\n[3] Extrato\n[4] Sair\n\n"))
@@ -45,6 +53,8 @@
         
     else:
         print("Operação invalida, Tente novamente\n")
+        
+
     
             
         
