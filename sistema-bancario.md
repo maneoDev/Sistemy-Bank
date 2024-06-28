@@ -1,64 +1,125 @@
 # DESAFIO DIO
 
-    saldo = 0
-    limite = 500
-    extrato = ""
-    quantidade_saque = 0 
-    LIMITE = 3
-    contador = 0  
+def menu():
+    menu = input("[1]DEPOSITO\n[2]SACAR\n[3]EXTRATO\n[4]NOVO USUARIO\n[5]NOVA CONTA\n[6]CONTAS\n[7]SAIR\n\n")
+    return input(menu)
 
-
-    usuario = [0,1,2]
-    usuario[0] = input("Email: ")
-    usuario[1] = input("Nome: ")
-    usuario[2] = input("Telefone: ")
-
-    print(f"Bem vindo {usuario[1]}\n")
-
-    while True:
-    opcao = int(input("[1] Depositar\n[2] Sacar\n[3] Extrato\n[4] Sair\n\n"))
-    
-    if opcao == 1:
-        valor = int(input("Valor a ser depositado: "))
+def deposito(saldo, valor,extrato,/):
+    if valor > 0:
         saldo += valor
-        print("\nValor depositado com sucesso\n")
-        extrato += (f"Deposito no valor de: R$ {valor}")
+        print("Deposito feito com sucesso!")
+        extrato += f"Deposito no valor de R${valor:.2f}........\n"
+    else:
+        print("Erro na operação, valor é invalido")
+    
+    return saldo, extrato
+
+def sacar(*, saldo,valor,extrato,limite,qntd_saques, limites_saques):
+    
+    if valor > saldo:
+        print("Operação falhou, valor maior que saldo")
         
-    elif opcao == 2:
-        contador +=1
+    elif valor > limite:
+        print("Operação falhou, ultrapassou o limite de R$ 500")
         
-        if contador > LIMITE:
-            print("Você atingiu o limite diario\n")
-            break
+    elif qntd_saques > limites_saques:
+        print("Operação falhou, ultrapassou limite de saques diarios")
         
-        saque = int(input("Valor a ser sacado: \n"))
-        
-        if saque > saldo or saque > 500:
-            print("Saldo indisponivel ou Valor excede o limite de R$ 500 por saque\n")
-            break
-        
-        saldo -= saque
-        
-        extrato += (f"\nVoce realizou um saque de: R$ {saque}...\n")
-        
-        print("Saque realizado com sucesso\n")
-        
-    elif opcao == 3:
-        print(extrato)
-        print(f"\nSaldo disponivel na conta é de: R$ {saldo}\n")
-        
-    elif opcao == 4:
-        print("Saindo do sistema....")
-        break
+    elif valor > 0 :
+        saldo -= valor
+        print("Valor sacado com sucesso!")
+        extrato += f"Saque no valor de R${valor:.2f}........\n"
+        qntd_saques +=1
         
     else:
-        print("Operação invalida, Tente novamente\n")
+        print("Operação falhou, Valor invalido!")
         
+    return saldo,extrato
+        
+def mostrar_extrato(saldo,/,*, extrato):
+    print("//////////////////////////////////////////\n")
+    print("Não houveram transações." if not extrato else extrato)
+    print(f"\nSaldo: R${saldo:.2f}")
+    print("//////////////////////////////////////////\n")
 
+def novo_usuario(usuarios):
+    cpf = input("CPF(apenas numeros): ")
+    usuario = filtrar_usuario(cpf,usuarios)
     
+    if usuario:
+        print("\n CPF já cadastrado")
+        return
+    
+    nome = input("Nome completo: ")
+    data_de_nascimento = input("Data de nascimento: ")
+    endereco = input("Endereço: ")
+    
+    usuarios.append({"nome" : nome, "data_de_nascimeneto" : data_de_nascimento, "endereço" : endereco})
+    print("Usuario criado!")
+    
+def filtrar_usuario(cpf,usuarios):
+    usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
+    return usuarios_filtrados[0] if usuarios_filtrados else None
+
+def criar_conta(agencia, numero_conta,usuarios):
+    cpf = input("CPF(apenas numeros): ")
+    usuario = filtrar_usuario(cpf,usuarios)
+    if usuario:
+        print("\nConta criada!")
+        return {"agencia" : agencia, "numero_conta" : numero_conta, "usuario" : usuario}
+    
+    print("Usuario não encontrado!")
+        
+def mostrar_contas(contas):
+    for conta in contas:
+        linha = f"""\
+            Agencia:\t{conta["agencia"]}
+            C/C:\t\t{conta["numero_conta"]}
+            Titular:\t{conta["usuario"]["nome"]}
+        """
+        print("=" * 100)
+        print(linha)
+    
+def main():
+    LIMITE_SAQUES = 3
+    AGENCIA = "0001"
+    
+    saldo = 0
+    limite = 500
+    extrato = " "
+    qntd_saques = 0
+    usuarios = [ ]
+    contas = [ ]
+    
+    while True:
+        opcao = menu()
+        
+        if opcao == 1:
+            valor = float(input("Valor do deposito: "))
+            saldo, extrato = deposito(saldo, valor, extrato)
             
-        
-        
-       
+        elif opcao == 2:
+            valor = float(input("Valor do Saque: "))
             
+            saldo, extrato = sacar( saldo = saldo, valor = valor, extrato = extrato, limite = limite, qntd_saques = qntd_saques, limite_saques = LIMITE_SAQUES)
+            
+        elif opcao == 3:
+            mostrar_extrato(saldo, extrato = extrato)
+            
+        elif opcao == 4:
+            novo_usuario(usuarios)
+            
+        elif opcao == 5:
+            numero_conta = len(contas) + 1
+            conta = criar_conta(AGENCIA, numero_conta, usuarios)
+            
+            if conta:
+                contas.append(conta)
+                
+        elif opcao == 6:
+            mostrar_contas(contas)
+            
+        elif opcao == 7:
+            break
         
+main() 
